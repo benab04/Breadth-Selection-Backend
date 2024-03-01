@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -79,6 +79,9 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+
+DATABASES["default"] =dj_database_url.parse("postgres://breadth_selection_django_user:mdlEiuhI9fRf07QD3kodbzdcLnIkBRKf@dpg-cnh0auvsc6pc73b6adrg-a.oregon-postgres.render.com/breadth_selection_django")
 
 
 # Password validation
