@@ -9,8 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-import dj_database_url
-import os
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,12 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY") 
-# "django-insecure-_#t8*r)%xzsw*m!3%w4o0-ru=9oau!om0_ue@a+t1ud&)-vk9h"
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False").lower() =="true"
+SECRET_KEY = "django-insecure-_#t8*r)%xzsw*m!3%w4o0-ru=9oau!om0_ue@a+t1ud&)-vk9h"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED HOSTS").split(" ")
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -81,9 +80,6 @@ DATABASES = {
     }
 }
 
-database_url=os.environ.get("DATABASE_URL") 
-DATABASES["default"] =dj_database_url.parse(database_url)
-# postgres://breadth_selection_django_user:mdlEiuhI9fRf07QD3kodbzdcLnIkBRKf@dpg-cnh0auvsc6pc73b6adrg-a.oregon-postgres.render.com/breadth_selection_django
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
