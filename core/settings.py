@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-_#t8*r)%xzsw*m!3%w4o0-ru=9oau!om0_ue@a+t1ud&)-vk9h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','https://breadth-selection-backend.onrender.com/']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','breadth-selection-backend.onrender.com']
 
 CSRF_TRUSTED_ORIGINS = ['http://localhost','http://*.127.0.0.1','https://breadth-selection-backend.onrender.com/']
 # Application definition
