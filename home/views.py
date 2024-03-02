@@ -37,28 +37,27 @@ def preferences(request):
         df = pd.read_csv(final_grades_path)
         course_data = df
         user_preferences=request.POST
-        print(request.POST)
-        user_preferences = {key: float(value) for key, value in user_preferences.items()}
         
+        user_preferences = {key: float(value) for key, value in user_preferences.items()}
         
         def calculate_search_score(course, preferences):
             course_words = course.lower().split()
-            preference_words = [word.lower() for preference in preferences for word in preference.split()]
             
-            # Initialize a list to store scores for partial matches
             partial_match_scores = []
             
-            # Iterate through each preference word
-            for preference_word in preference_words:
-                # Check if the preference word partially matches any word in the course description
-                for course_word in course_words:
-                    if preference_word in course_word:
-                        # Calculate the percentage of matching characters
-                        match_percentage = len(preference_word) / len(course_word) * 100
-                        partial_match_scores.append(match_percentage)
-                        break  # Break once a match is found for the preference word
+            for preference, weightage in preferences.items():
+                preference_words = preference.lower().split()
+                for preference_word in preference_words:
+                    for course_word in course_words:
+                        if preference_word in course_word:
+                            match_percentage = len(preference_word) / len(course_word) * 100
+                            weighted_score = match_percentage * weightage
+                            partial_match_scores.append(weighted_score)
+                            break 
+                    else:
+                        continue
+                    break 
             
-            # If there are partial match scores, take the maximum score
             if partial_match_scores:
                 score = max(partial_match_scores)
             else:
@@ -80,4 +79,6 @@ def preferences(request):
 
 @csrf_exempt
 def analytics(request):
+    if request.method=="POST":
+        return
     redirect('/')
