@@ -20,5 +20,6 @@ from home.views import *
 
 urlpatterns = [
     path('', dashboard),
+    path("preferences/", preferences),
     path("admin/", admin.site.urls),
 ]
