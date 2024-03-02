@@ -71,6 +71,9 @@ def preferences(request):
         df['search_score'] = df['course'].apply(calculate_search_score, preferences=user_preferences)
         filtered_df = df[df['search_score'] > 0]
         result_df = filtered_df[['course', 'final_score', 'search_score']]
+        result_df['search_score']= (result_df['search_score']/100 )*20
+        result_df['final_score']= result_df['final_score']*0.6 + result_df['search_score']*0.4 
+
         sorted_result_df = result_df.sort_values(by='final_score', ascending=False)
         json_data = sorted_result_df.to_json(orient='records')
         return HttpResponse(json_data, content_type='application/json')
@@ -80,5 +83,16 @@ def preferences(request):
 @csrf_exempt
 def analytics(request):
     if request.method=="POST":
-        return
+        course_name=(request.POST.get("Course", None))
+        
+        all_df=pd.read_csv('data/final_grades.csv')
+        sessions=all_df[all_df['course']==course_name]
+        def custom_sort(item):
+            season, year = item.split()
+            return (year, 0 if season == 'Spring' else 1)
+
+        sorted_sessions = sessions[sessions['session']==sorted(sessions['session'], key=custom_sort)]
+        sorted_sessions=sorted_sessions.drop(["course"], axis=1)
+        json_data = sorted_sessions.to_json(orient='records')
+        return HttpResponse(json_data, content_type='application/json')
     redirect('/')
