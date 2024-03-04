@@ -83,16 +83,23 @@ def preferences(request):
 @csrf_exempt
 def analytics(request):
     if request.method=="POST":
-        course_name=(request.POST.get("Course", None))
+        course_name = request.POST.get("Course", None)
+        all_df = pd.read_csv('data/final_grades.csv')
+        sessions = all_df[all_df['course'] == course_name]
         
-        all_df=pd.read_csv('data/final_grades.csv')
-        sessions=all_df[all_df['course']==course_name]
         def custom_sort(item):
             season, year = item.split()
             return (year, 0 if season == 'Spring' else 1)
-
-        sorted_sessions = sessions[sessions['session']==sorted(sessions['session'], key=custom_sort)]
-        sorted_sessions=sorted_sessions.drop(["course"], axis=1)
+        
+        sorted_sessions = sessions.copy()
+        sorted_sessions['session'] = sorted_sessions['session'].apply(custom_sort)
+        sorted_sessions = sorted_sessions.sort_values(by='session')
+        sorted_sessions['session'] = sorted_sessions['session'].apply(lambda x: f"{x[0]} {'Spring' if x[1] == 0 else 'Autumn'}")
+        
+        sorted_sessions = sorted_sessions.drop(["course"], axis=1)
+        
         json_data = sorted_sessions.to_json(orient='records')
         return HttpResponse(json_data, content_type='application/json')
     redirect('/')
+    
+    
