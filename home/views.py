@@ -3,8 +3,13 @@ from django.http import HttpResponse,JsonResponse
 from rest_framework.decorators import api_view
 import pandas as pd
 import requests
+from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from .models import *
 
 def dashboard(request):
     final_grades_path = 'data/final_grades.csv'
@@ -102,4 +107,51 @@ def analytics(request):
         return HttpResponse(json_data, content_type='application/json')
     redirect('/')
     
-    
+@csrf_exempt
+def login_page(request):
+    if request.method=="POST":
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+        print(username, password)
+        if not User.objects.filter(username=username).exists():
+            return JsonResponse({"error": "User not registered"}, status=400)
+        
+        user = authenticate(username=username, password=password)
+        
+        if user is None:
+            return JsonResponse({"error": "Invalid password"}, status=401)
+        
+        else:
+            login(request, user)
+            return JsonResponse({"success": "Login Successful"}, status=200)
+            
+    return JsonResponse({"error": "Bad Request"}, status=400)
+
+@csrf_exempt
+def register_page(request):
+    if request.method=="POST":
+        first_name=request.POST.get('first_name')
+        last_name=request.POST.get('last_name')
+        username=request.POST.get('username')
+        password=request.POST.get('password')
+        
+        user=User.objects.filter(username=username)
+        
+        if user.exists():
+            return JsonResponse({"error": "User is already registered"}, status=400)
+        
+        user=User.objects.create(
+            first_name=first_name,
+            last_name=last_name,
+            username=username
+        )
+        
+        user.set_password(password)
+        user.save()
+        return JsonResponse({"error": "Account created successfully"}, status=200)
+
+    return JsonResponse({"error": "Bad Request"}, status=400)
+@csrf_exempt
+def logout_page(request):
+    logout(request)
+    return JsonResponse({"success": "Logged out"}, status=200)

@@ -23,6 +23,9 @@ urlpatterns = [
     path('', dashboard),
     path("preferences/", preferences),
     path('analytics/', analytics),
+    path('login/',login_page),
+    path('logout/',logout_page),
+    path('register/',register_page),
     path("admin/", admin.site.urls),
 ]
 
