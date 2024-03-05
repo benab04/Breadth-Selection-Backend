@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from home.views import *
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('', dashboard),
@@ -24,3 +25,6 @@ urlpatterns = [
     path('analytics/', analytics),
     path("admin/", admin.site.urls),
 ]
+
+
+urlpatterns+=staticfiles_urlpatterns()
