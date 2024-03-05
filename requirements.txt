@@ -10,3 +10,4 @@ gunicorn==20.1.0
 django-cors-headers
 django-database-url==1.0.3
 django-environ==0.11.2
+python-dotenv==0.21.0
